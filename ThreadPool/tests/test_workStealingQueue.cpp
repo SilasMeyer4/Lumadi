@@ -1,5 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
-#include <LumadiThreadPool/workStealingQueue.h>
+#include <Lumadi/workStealingQueue.h>
 #include <thread>
 #include <atomic>
 

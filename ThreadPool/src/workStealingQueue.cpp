@@ -1,4 +1,4 @@
-#include <LumadiThreadPool/workStealingQueue.h>
+#include <Lumadi/workStealingQueue.h>
 
 void Lumadi::WorkStealingQueue::Enqueue(Task task)
 {
