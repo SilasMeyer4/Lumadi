@@ -22,7 +22,7 @@ install(TARGETS Lumadi_ThreadPool
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
 )
-install(DIRECTORY include/ DESTINATION include)
+install(DIRECTORY include/LumadiThreadPool/ DESTINATION include/LumadiThreadPool)
 
 # CPack-Infos
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
