@@ -11,7 +11,7 @@ add_library(Lumadi_ThreadPool ${THREADPOOL_SOURCES})
 # Öffentliche Header bekannt machen
 target_include_directories(Lumadi_ThreadPool
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/includes>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
 
