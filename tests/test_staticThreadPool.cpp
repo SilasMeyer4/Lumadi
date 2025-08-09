@@ -1,5 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
-#include "staticThreadPool.h"
+#include <LumadiThreadPool/staticThreadPool.h>
 #include <future>
 #include <atomic>
 #include <thread>

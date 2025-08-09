@@ -1,3 +1,6 @@
+#ifndef LUMADI_THREAD_POOL_CONCEPTS_H
+#define LUMADI_THREAD_POOL_CONCEPTS_H
+
 #include <concepts>
 #include <functional>
 
@@ -15,3 +18,5 @@ concept WorkStealingQueueConcept = requires(Q q, Task t) {
 
   { q.Stop() };
 };
+
+#endif // LUMADI_THREAD_POOL_CONCEPTS_H
