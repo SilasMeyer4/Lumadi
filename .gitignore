@@ -1,0 +1,47 @@
+# Ignore build artifacts and dependencies
+build/
+_deps/
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Ignore Visual Studio/Windows specific files
+*.sln
+*.vcxproj*
+*.user
+*.pdb
+*.obj
+*.idb
+*.ipch
+*.aps
+*.ncb
+*.suo
+*.opensdf
+*.sdf
+*.cache
+*.log
+*.tlog
+*.lastbuildstate
+*.db
+*.VC.db
+*.VC.opendb
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore package archives
+*.zip
+*.tar.gz
+*.7z
+*.rar
+
+# Ignore test output
+Testing/
