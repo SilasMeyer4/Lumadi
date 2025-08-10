@@ -5,11 +5,19 @@ project(Lumadi VERSION 0.1.0 LANGUAGES CXX)
 add_subdirectory(ThreadPool)
 
 
+
 # Optionally, add other components in the future:
 # add_subdirectory(Logger)
 # add_subdirectory(OtherComponent)
 
-# Super-Paket-Config für das Gesamtpaket Lumadi
+# Super package ALIAS target for build context (FetchContent, add_subdirectory)
+if(NOT TARGET Lumadi::Lumadi)
+  add_library(Lumadi_Lumadi INTERFACE)
+  add_library(Lumadi::Lumadi ALIAS Lumadi_Lumadi)
+  target_link_libraries(Lumadi_Lumadi INTERFACE Lumadi::ThreadPool)
+endif()
+
+# Super package config for the complete Lumadi package
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
 	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/LumadiConfig.cmake.in"

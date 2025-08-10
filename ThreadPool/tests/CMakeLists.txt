@@ -1,4 +1,4 @@
-# Catch2 installieren (falls nicht schon im System vorhanden)
+# installing cache2
 include(FetchContent)
 FetchContent_Declare(
     catch2
@@ -7,12 +7,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(catch2)
 
-# Test-Binary bauen
+# test binary
 add_executable(test_threadpool test_staticThreadPool.cpp test_workStealingQueue.cpp)
 target_link_libraries(test_threadpool PRIVATE ThreadPool Catch2::Catch2WithMain)
 target_include_directories(test_threadpool PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
 )
 
-# Als Test registrieren
+# register test
 add_test(NAME ThreadPoolTests COMMAND test_threadpool)
