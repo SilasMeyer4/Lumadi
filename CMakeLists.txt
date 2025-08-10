@@ -20,3 +20,9 @@ install(FILES
 	"${CMAKE_CURRENT_BINARY_DIR}/LumadiConfig.cmake"
 	DESTINATION lib/cmake/Lumadi
 )
+
+set(CPACK_PACKAGE_NAME "Lumadi")
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_GENERATOR "TGZ")
+
+include(CPack)
