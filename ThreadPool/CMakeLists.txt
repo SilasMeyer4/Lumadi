@@ -25,10 +25,11 @@ install(TARGETS ThreadPool
     RUNTIME DESTINATION bin
 )
 
-# only including threadPool.h
-install(FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lumadi/threadPool.h
-    DESTINATION include/lumadi)
+# Install all headers, preserving the directory structure
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/lumadi/
+    DESTINATION include/lumadi
+    FILES_MATCHING PATTERN "*.h"
+)
 
 
 # Export targets and create CMake package config files
