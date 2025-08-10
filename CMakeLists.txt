@@ -14,11 +14,11 @@ include(CMakePackageConfigHelpers)
 configure_package_config_file(
 	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/LumadiConfig.cmake.in"
 	"${CMAKE_CURRENT_BINARY_DIR}/LumadiConfig.cmake"
-	INSTALL_DESTINATION lib/cmake/Lumadi
+	INSTALL_DESTINATION lib/cmake/lumadi
 )
 install(FILES
 	"${CMAKE_CURRENT_BINARY_DIR}/LumadiConfig.cmake"
-	DESTINATION lib/cmake/Lumadi
+	DESTINATION lib/cmake/lumadi
 )
 
 set(CPACK_PACKAGE_NAME "Lumadi")
