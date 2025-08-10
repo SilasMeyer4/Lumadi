@@ -20,7 +20,7 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install cmake ninja
       - name: Configure
-        run: cmake -B build -S . -G Ninja
+        run: cmake -B build -S . -G Ninja -DBUILD_THREADPOOL_TESTS=ON
       - name: Build
         run: cmake --build build --config Release
       - name: Run tests
@@ -30,7 +30,7 @@ jobs:
       - name: Upload package
         uses: actions/upload-artifact@v4
         with:
-          name: LumadiThreadPool-${{ runner.os }}
+          name: Lumadi-ThreadPool-${{ runner.os }}
           path: build/*.tar.gz
 
   release:

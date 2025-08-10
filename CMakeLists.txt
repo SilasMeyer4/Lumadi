@@ -26,3 +26,5 @@ set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_GENERATOR "TGZ")
 
 include(CPack)
+
+enable_testing()
