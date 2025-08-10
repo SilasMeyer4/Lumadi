@@ -1,4 +1,5 @@
-
+#ifndef LUMADI_DETAIL_THREADPOOL_STATICTHREADPOOL_H
+#define LUMADI_DETAIL_THREADPOOL_STATICTHREADPOOL_H
 
 #include "IThreadPool.h"
 #include "IQueue.h"
@@ -134,3 +135,5 @@ namespace Lumadi
   template <WorkStealingQueueConcept QueueType>
   thread_local int StaticThreadPool<QueueType>::thread_index_ = -1;
 }
+
+#endif // LUMADI_DETAIL_THREADPOOL_STATICTHREADPOOL_H
