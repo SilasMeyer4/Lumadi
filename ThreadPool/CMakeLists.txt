@@ -4,8 +4,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 
+
 file(GLOB THREADPOOL_SOURCES src/*.cpp)
 add_library(ThreadPool ${THREADPOOL_SOURCES})
+# ALIAS-Target für konsistente Nutzung
+add_library(Lumadi::ThreadPool ALIAS ThreadPool)
 
 target_include_directories(ThreadPool
     PUBLIC

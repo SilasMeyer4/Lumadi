@@ -1,2 +1,7 @@
 @PACKAGE_INIT@
 include("${CMAKE_CURRENT_LIST_DIR}/../ThreadPool/lib/cmake/ThreadPool/ThreadPoolTargets.cmake")
+# Optional: zentrales ALIAS-Target für das Superpaket
+if(NOT TARGET Lumadi::Lumadi)
+	add_library(Lumadi::Lumadi INTERFACE IMPORTED)
+	target_link_libraries(Lumadi::Lumadi INTERFACE Lumadi::ThreadPool)
+endif()
