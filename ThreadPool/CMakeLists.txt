@@ -24,8 +24,8 @@ install(TARGETS ThreadPool
 
 # only including threadPool.h
 install(FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/Lumadi/threadPool.h
-    DESTINATION include/Lumadi)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lumadi/threadPool.h
+    DESTINATION include/lumadi)
 
 
 # Export targets and create CMake package config files
