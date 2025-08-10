@@ -1,5 +1,5 @@
 @PACKAGE_INIT@
-include("${CMAKE_CURRENT_LIST_DIR}/../ThreadPool/lib/cmake/ThreadPool/ThreadPoolTargets.cmake")
+include("${PACKAGE_PREFIX_DIR}/lib/cmake/ThreadPool/ThreadPoolTargets.cmake")
 # Super package ALIAS target for build context (FetchContent, add_subdirectory)
 if(NOT TARGET Lumadi::Lumadi)
 	add_library(Lumadi::Lumadi INTERFACE IMPORTED)
