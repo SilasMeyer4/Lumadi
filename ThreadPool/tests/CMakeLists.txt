@@ -9,7 +9,7 @@ FetchContent_MakeAvailable(catch2)
 
 # Test-Binary bauen
 add_executable(test_threadpool test_staticThreadPool.cpp test_workStealingQueue.cpp)
-target_link_libraries(test_threadpool PRIVATE Lumadi_ThreadPool Catch2::Catch2WithMain)
+target_link_libraries(test_threadpool PRIVATE ThreadPool Catch2::Catch2WithMain)
 target_include_directories(test_threadpool PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
 )
