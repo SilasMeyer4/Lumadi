@@ -1,6 +1,6 @@
 #include "lumadi/detail/threadPool/workStealingQueue.h"
 
-void Lumadi::WorkStealingQueue::Enqueue(Task task)
+void Lumadi::WorkStealingQueue::Enqueue(TaskType task)
 {
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -9,7 +9,7 @@ void Lumadi::WorkStealingQueue::Enqueue(Task task)
   NotifyOne();
 }
 
-bool Lumadi::WorkStealingQueue::Dequeue(Task &task)
+bool Lumadi::WorkStealingQueue::Dequeue(TaskType &task)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (queue_.empty())
@@ -21,7 +21,7 @@ bool Lumadi::WorkStealingQueue::Dequeue(Task &task)
   return true;
 }
 
-bool Lumadi::WorkStealingQueue::WaitDequeue(Task &task)
+bool Lumadi::WorkStealingQueue::WaitDequeue(TaskType &task)
 {
   std::unique_lock<std::mutex> lock(mutex_);
   cv_.wait(lock, [this]
@@ -52,7 +52,7 @@ bool Lumadi::WorkStealingQueue::IsEmpty() const
   return queue_.empty();
 }
 
-bool Lumadi::WorkStealingQueue::Steal(Task &task)
+bool Lumadi::WorkStealingQueue::Steal(TaskType &task)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (queue_.empty())

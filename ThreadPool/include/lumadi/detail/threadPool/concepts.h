@@ -4,10 +4,10 @@
 #include <concepts>
 #include <functional>
 
-using Task = std::function<void()>;
+using TaskType = std::function<void()>;
 
 template <typename Q>
-concept WorkStealingQueueConcept = requires(Q q, Task t) {
+concept WorkStealingQueueConcept = requires(Q q, TaskType t) {
   { q.Enqueue(t) };
 
   { q.Dequeue(t) } -> std::convertible_to<bool>;

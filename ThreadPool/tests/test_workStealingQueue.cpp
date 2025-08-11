@@ -8,9 +8,9 @@ using namespace Lumadi;
 TEST_CASE("WorkStealingQueue basic enqueue/dequeue", "[WorkStealingQueue]")
 {
   WorkStealingQueue queue;
-  Task t = [] {};
+  TaskType t = [] {};
   queue.Enqueue(t);
-  Task out;
+  TaskType out;
   REQUIRE(queue.Dequeue(out));
 }
 
@@ -18,13 +18,13 @@ TEST_CASE("WorkStealingQueue WaitDequeue wakes up", "[WorkStealingQueue]")
 {
   WorkStealingQueue queue;
   std::atomic<bool> done{false};
-  Task t = [&done]
+  TaskType t = [&done]
   { done = true; };
   std::thread producer([&]
                        {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
         queue.Enqueue(t); });
-  Task out;
+  TaskType out;
   REQUIRE(queue.WaitDequeue(out));
   out();
   REQUIRE(done);
@@ -39,7 +39,7 @@ TEST_CASE("WorkStealingQueue Steal steals from back", "[WorkStealingQueue]")
                 { x = 1; });
   queue.Enqueue([&]
                 { x = 2; });
-  Task stolen;
+  TaskType stolen;
   REQUIRE(queue.Steal(stolen));
   stolen();
   REQUIRE(x == 2); // takes the last element
@@ -54,7 +54,7 @@ TEST_CASE("WorkStealingQueue Stop wakes WaitDequeue", "[WorkStealingQueue]")
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
         queue.Stop();
         finished = true; });
-  Task out;
+  TaskType out;
   REQUIRE_FALSE(queue.WaitDequeue(out));
   stopper.join();
   REQUIRE(finished);

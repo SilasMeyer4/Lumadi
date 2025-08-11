@@ -5,13 +5,43 @@
 #include "IQueue.h"
 #include "workStealingQueue.h"
 #include "concepts.h"
+#include "task.h"
+#include "roundRobinStealingStrategy.h"
 
 namespace Lumadi
 {
+
+  /**
+   * @brief RAII guard to increment/decrement the active thread counter.
+   */
+  struct ActiveThreadCounter
+  {
+    std::atomic<size_t> &counter;
+    /**
+     * @brief Increments the counter on construction.
+     * @param c Reference to the atomic counter.
+     */
+    ActiveThreadCounter(std::atomic<size_t> &c) : counter(c)
+    {
+      ++counter;
+    }
+    /**
+     * @brief Decrements the counter on destruction.
+     */
+    ~ActiveThreadCounter()
+    {
+      --counter;
+    }
+  };
+
   template <WorkStealingQueueConcept QueueType>
   class StaticThreadPool
   {
   public:
+    /**
+     * @brief Constructs a static thread pool with a fixed number of threads.
+     * @param numThreads Number of worker threads to create.
+     */
     StaticThreadPool(size_t numThreads) : running_(true)
     {
       threads_.reserve(numThreads);
@@ -23,6 +53,9 @@ namespace Lumadi
       }
     }
 
+    /**
+     * @brief Destructor. Shuts down the thread pool and joins all threads.
+     */
     ~StaticThreadPool()
     {
       running_ = false;
@@ -36,13 +69,23 @@ namespace Lumadi
           t.join();
     }
 
+    /**
+     * @brief Adds a new task to the thread pool.
+     *
+     * The task will be enqueued to a local or global queue depending on the calling thread.
+     * @tparam Func Callable type.
+     * @tparam Args Argument types.
+     * @param f Callable to execute.
+     * @param args Arguments to pass to the callable.
+     * @return Task<ReturnType> representing the result of the task.
+     */
     template <typename Func, typename... Args>
-    auto AddTask(Func &&f, Args &&...args) -> std::future<std::invoke_result_t<Func, Args...>>
+    auto AddTask(Func &&f, Args &&...args) -> Task<std::invoke_result_t<Func, Args...>>
     {
       using ReturnType = std::invoke_result_t<Func, Args...>;
       auto task = std::make_shared<std::packaged_task<ReturnType()>>(
           std::bind(std::forward<Func>(f), std::forward<Args>(args)...));
-      auto result = task->get_future();
+      std::shared_future<ReturnType> future = task->get_future().share();
 
       auto wrapper = [task]()
       {
@@ -59,7 +102,26 @@ namespace Lumadi
       }
 
       cv_.notify_one();
-      return result;
+      return Task<ReturnType>(std::move(future));
+    }
+
+    /**
+     * @brief Returns the number of currently active (executing) threads.
+     * @return Number of active threads.
+     */
+    size_t GetActiveThreadCount() const
+    {
+      return amountOfActiveThreads_;
+    }
+
+    /**
+     * @brief Changes the work stealing strategy at runtime.
+     * @tparam Strategy The new strategy class template (must implement IStealingStrategy).
+     */
+    template <template <typename> class Strategy>
+    void ChangeStealingStrategy()
+    {
+      stealingStrategy_ = std::make_unique<Strategy<QueueType>>();
     }
 
   private:
@@ -69,31 +131,24 @@ namespace Lumadi
     std::atomic<bool> running_{false};
     std::mutex mutex_;
     std::condition_variable cv_;
+    std::atomic<size_t> amountOfActiveThreads_{0};
+    std::unique_ptr<IStealingStrategy<QueueType>> stealingStrategy_ = std::make_unique<RoundRobinStealingStrategy<QueueType>>();
 
     static thread_local int thread_index_;
 
+    /**
+     * @brief Main worker loop for each thread.
+     * @param index Index of the worker thread.
+     */
     void WorkerLoop(size_t index)
     {
       thread_index_ = static_cast<int>(index);
       while (running_ || HasWork())
       {
-        Task task;
-        if (localQueues_[index]->Dequeue(task))
+        TaskType task;
+        if (localQueues_[index]->Dequeue(task) || globalQueue_.Dequeue(task) || TryStealFromOtherWorkers(index, task))
         {
-          task();
-          continue;
-        }
-
-        // 2) global queue (non-blocking)
-        if (globalQueue_.Dequeue(task))
-        {
-          task();
-          continue;
-        }
-
-        // 3) try steal from other workers
-        if (TryStealFromOtherWorkers(index, task))
-        {
+          ActiveThreadCounter activeThreadCounter(amountOfActiveThreads_);
           task();
           continue;
         }
@@ -107,18 +162,21 @@ namespace Lumadi
       thread_index_ = -1;
     }
 
-    bool TryStealFromOtherWorkers(size_t selfIndex, Task &task)
+    /**
+     * @brief Tries to steal a task from other workers using the current stealing strategy.
+     * @param selfIndex Index of the current worker.
+     * @param task Reference to store the stolen task.
+     * @return True if a task was stolen, false otherwise.
+     */
+    bool TryStealFromOtherWorkers(size_t selfIndex, TaskType &task)
     {
-      size_t n = localQueues_.size();
-      for (size_t offset = 1; offset < n; ++offset)
-      {
-        size_t victim = (selfIndex + offset) % n;
-        if (localQueues_[victim]->Steal(task))
-          return true;
-      }
-      return false;
+      return stealingStrategy_->TryStealFromOtherWorkers(localQueues_, selfIndex, task);
     }
 
+    /**
+     * @brief Checks if there is any work left in the global or local queues.
+     * @return True if there is work, false otherwise.
+     */
     bool HasWork() const
     {
       if (!globalQueue_.IsEmpty())
