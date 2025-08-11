@@ -24,7 +24,7 @@ target_link_libraries(your_target PRIVATE Lumadi::ThreadPool)
 target_link_libraries(your_target PRIVATE Lumadi::Lumadi)
 ```
 
-### 2. Building yourself (doesn't work as smoothly as I want atleast with MSVC)
+### 2. Cloning Repo and building yourself (doesn't work as smoothly as I want atleast with MSVC)
 ```bash
 
 git clone https://github.com/SilasMeyer4/Lumadi.git
@@ -42,10 +42,10 @@ cmake --install build-debug --config Debug --prefix ../Lumadi-install-debug
 ```
 
 ```cmake
-find_package(Lumadi REQUIRED PATHS "${CMAKE_SOURCE_DIR}/lib/Lumadi-install-<here Debug or Release>/lib/cmake/lumadi")
+find_package(Lumadi REQUIRED PATHS "${CMAKE_SOURCE_DIR}/lib/Lumadi-install-<here debug or release>/lib/cmake/lumadi")
 
-target_include_directories(LumadiTesting PRIVATE $<TARGET_PROPERTY:Lumadi::ThreadPool,INTERFACE_INCLUDE_DIRECTORIES>)
-target_link_libraries(LumadiTesting PRIVATE Lumadi::ThreadPool)
+target_include_directories(your_target PRIVATE $<TARGET_PROPERTY:Lumadi::ThreadPool,INTERFACE_INCLUDE_DIRECTORIES>)
+target_link_libraries(your_target PRIVATE Lumadi::ThreadPool)
 ```
 
 ### 3. Usage Example
