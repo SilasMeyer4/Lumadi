@@ -62,11 +62,11 @@ int main() {
 
     // Using Lambda
     auto future1 = pool.AddTask([] { return 42; }); // returns std::future
-    int result1 = future1.get();
+    int result1 = future1.Get();
 
     // Using Function
     auto future2 = pool.AddTask(CompareInt, 4, 6);
-    bool result2 = future2.get();
+    bool result2 = future2.Get();
 
     std::cout << "Lambda returned: " << result1 << " | Function returned: " << result2 << std::endl;
 }

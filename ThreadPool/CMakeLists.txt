@@ -61,7 +61,7 @@ install(FILES
 
 
 # Option für Tests (Default: OFF)
-option(BUILD_THREADPOOL_TESTS "Build ThreadPool tests" ON)
+option(BUILD_THREADPOOL_TESTS "Build ThreadPool tests" OFF)
 if(BUILD_THREADPOOL_TESTS)
     enable_testing()
     add_subdirectory(tests)
