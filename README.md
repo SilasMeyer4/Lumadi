@@ -61,7 +61,7 @@ int main() {
     Lumadi::StaticThreadPool<Lumadi::WorkStealingQueue> pool(4); // 4 is the amount of threads in this example
 
     // Using Lambda
-    auto future1 = pool.AddTask([] { return 42; }); // returns std::future
+    auto future1 = pool.AddTask([] { return 42; }); // returns Task<T>. Is a wrapper around std::shared_future
     int result1 = future1.Get();
 
     // Using Function
