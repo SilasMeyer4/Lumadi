@@ -24,7 +24,7 @@ target_link_libraries(your_target PRIVATE Lumadi::ThreadPool)
 target_link_libraries(your_target PRIVATE Lumadi::Lumadi)
 ```
 
-### 2. Building yourself (doesn't work as smoothly as I won't atleast with MSCV)
+### 2. Building yourself (doesn't work as smoothly as I want atleast with MSVC)
 ```bash
 
 git clone https://github.com/SilasMeyer4/Lumadi.git
@@ -53,12 +53,24 @@ target_link_libraries(LumadiTesting PRIVATE Lumadi::ThreadPool)
 #include <lumadi/threadPool.h>
 #include <future>
 
-int main() {
-    Lumadi::StaticThreadPool<Lumadi::WorkStealingQueue> pool(4);
-    auto future = pool.AddTask([] { return 42; }); // returns std::future
-    int result = future.get();
-    // ...
+int AddInt(int a, int b) {
+  return a + b;
 }
+
+int main() {
+    Lumadi::StaticThreadPool<Lumadi::WorkStealingQueue> pool(4); // 4 is the amount of threads in this example
+
+    // Using Lambda
+    auto future1 = pool.AddTask([] { return 42; }); // returns std::future
+    int result1 = future1.get();
+
+    // Using Function
+    auto future2 = pool.AddTask(CompareInt, 4, 6);
+    bool result2 = future2.get();
+
+    std::cout << "Lambda returned: " << result1 << " | Function returned: " << result2 << std::endl;
+}
+
 ```
 
 
