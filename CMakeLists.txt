@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 project(Lumadi VERSION 0.1.0 LANGUAGES CXX)
 
 # Add each library/component as a subdirectory
+
 add_subdirectory(ThreadPool)
+#add_subdirectory(Logger)
 
 
 
@@ -14,7 +16,7 @@ add_subdirectory(ThreadPool)
 if(NOT TARGET Lumadi::Lumadi)
   add_library(Lumadi_Lumadi INTERFACE)
   add_library(Lumadi::Lumadi ALIAS Lumadi_Lumadi)
-  target_link_libraries(Lumadi_Lumadi INTERFACE Lumadi::ThreadPool)
+	target_link_libraries(Lumadi_Lumadi INTERFACE Lumadi::ThreadPool)
 endif()
 
 # Super package config for the complete Lumadi package

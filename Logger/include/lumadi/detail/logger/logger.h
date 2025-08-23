@@ -10,16 +10,7 @@
 namespace Lumadi
 {
 
-  enum class LogLevel
-  {
-    Debug,
-    Info,
-    Warning,
-    Error,
-    Critical
-  };
-
-  class Logger : public ILogger
+  class Logger
   {
   private:
     LogLevel logLevel = LogLevel::Info;
